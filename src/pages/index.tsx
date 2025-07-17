@@ -4,7 +4,6 @@
 import { useState, useRef, useEffect } from "react";
 import html2canvas from "html2canvas";
 import jsPDF from "jspdf";
-import "../styles/certificate.css";
 
 // Simple SVG icons for a cleaner look without extra dependencies
 const UserIcon = () => (
