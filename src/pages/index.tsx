@@ -4,6 +4,7 @@
 import { useState, useRef, useEffect } from "react";
 import html2canvas from "html2canvas";
 import jsPDF from "jspdf";
+import "../styles/certificate.css";
 
 // Simple SVG icons for a cleaner look without extra dependencies
 const UserIcon = () => (
@@ -50,36 +51,40 @@ export default function Home() {
 
   const handleDownload = async () => {
     if (!certRef.current) return;
+    
     try {
+      // Wait for fonts and images to load
+      await new Promise(resolve => setTimeout(resolve, 2000));
+      
       const canvas = await html2canvas(certRef.current, {
-        scale: 2,
+        scale: 1,
         useCORS: true,
         allowTaint: true,
-        backgroundColor: null, // Use null for transparent background
-        ignoreElements: (element) => element.classList.contains('ignore-download'),
+        backgroundColor: '#ffffff',
+        width: 700,
+        height: 1024,
+        scrollX: 0,
+        scrollY: 0,
+        foreignObjectRendering: false,
+        imageTimeout: 0,
+        logging: false,
+        ignoreElements: (element) => element.classList?.contains('ignore-download') || false,
       });
-      const imgData = canvas.toDataURL("image/png");
       
-      // Use A4 dimensions, but in landscape if certificate is wider than tall
-      const pdf = new jsPDF({
-        orientation: canvas.width > canvas.height ? 'landscape' : 'portrait',
-        unit: 'mm',
-        format: 'a4'
-      });
+      const imgData = canvas.toDataURL("image/png", 1.0);
+      const pdf = new jsPDF("portrait", "mm", "a4");
       
-      const pdfWidth = pdf.internal.pageSize.getWidth();
-      const pdfHeight = pdf.internal.pageSize.getHeight();
-      const imgWidth = canvas.width;
-      const imgHeight = canvas.height;
-      const ratio = Math.min(pdfWidth / imgWidth, pdfHeight / imgHeight);
-
-      const finalImgWidth = imgWidth * ratio;
-      const finalImgHeight = imgHeight * ratio;
-      const x = (pdfWidth - finalImgWidth) / 2;
-      const y = (pdfHeight - finalImgHeight) / 2;
+      // A4 dimensions
+      const pdfWidth = 210;
+      const pdfHeight = 297;
+      const imgWidth = pdfWidth;
+      const imgHeight = (canvas.height * pdfWidth) / canvas.width;
       
-      pdf.addImage(imgData, "PNG", x, y, finalImgWidth, finalImgHeight);
-      pdf.save(`${fullName.trim() || 'Certificate'}_GA.pdf`);
+      // Center vertically if needed
+      const yPosition = imgHeight < pdfHeight ? (pdfHeight - imgHeight) / 2 : 0;
+      
+      pdf.addImage(imgData, "PNG", 0, yPosition, imgWidth, imgHeight);
+      pdf.save(`${fullName || 'Certificate'}_certificate.pdf`);
     } catch (error) {
       console.error('Error generating PDF:', error);
       alert('Error generating certificate. Please try again.');
@@ -186,80 +191,63 @@ export default function Home() {
              <div className="w-full max-w-[700px] aspect-[700/1024] transform transition-all duration-300 hover:shadow-[0_0_35px_rgba(251,191,36,0.5)] rounded-lg">
                 <div
                 ref={certRef}
-                className="relative w-full h-full bg-cover bg-center"
+                className="certificate-container"
                 style={{
                     backgroundImage: "url('/certificate-template.png')",
-                    backgroundSize: "contain",
-                    backgroundRepeat: "no-repeat",
                 }}
                 >
-                {/* --- Certificate content remains unchanged as requested --- */}
                 {/* Certificate Title */}
-                <div className="absolute top-[60px] w-full text-center">
-                    <h1 className="text-6xl font-bold mb-2" style={{ fontFamily: 'serif', textShadow: '2px 2px 4px rgba(0,0,0,0.5)', letterSpacing: '3px', color: '#FFD700' }}>
-                    CERTIFICATE
-                    </h1>
-                    <h2 className="text-3xl font-semibold" style={{ fontFamily: 'serif', textShadow: '1px 1px 2px rgba(0,0,0,0.4)', letterSpacing: '2px', color: '#FBBF24' }}>
-                    of Completion
-                    </h2>
+                <div className="certificate-title">
+                    <h1>CERTIFICATE</h1>
+                    <h2>of Completion</h2>
                 </div>
 
                 {/* Main content area */}
-                <div className="absolute left-[60px] right-[60px] top-[400px]">
-                    <div className="text-center mb-4">
-                    <p className="text-lg font-semibold text-black mb-2">This is to certify that</p>
+                <div className="certificate-content">
+                    <div className="certify-text">
+                        <p>This is to certify that</p>
                     </div>
                     
-                    <div className="text-center mb-3">
-                    <h2 className="text-4xl font-bold italic text-black" style={{ fontFamily: 'serif', borderBottom: '1px solid #000', paddingBottom: '2px', display: 'inline-block', minWidth: '300px' }}>
-                        {fullName || "Your Name Here"}
-                    </h2>
+                    <div className="student-name">
+                        <h2>{fullName || "Your Name Here"}</h2>
                     </div>
 
-                    <div className="text-center mb-3">
-                    <p className="text-md text-black leading-relaxed">
-                        has successfully completed the <strong>Spoken English</strong> course at<br />
-                        <strong>Great Academy of Spoken English</strong>
-                    </p>
+                    <div className="course-text">
+                        <p>has successfully completed the <strong>Spoken English</strong> course at<br />
+                        <strong>Great Academy of Spoken English</strong></p>
                     </div>
 
-                    <div className="text-center mb-6">
-                    <p className="text-xs text-black leading-relaxed px-4" style={{ maxWidth: '500px', margin: '0 auto', lineHeight: '1.4' }}>
-                        Demonstrating a Strong Commitment to Learning and Outstanding Performance<br />
-                        in all areas of Communication and Spoken English
-                    </p>
+                    <div className="achievement-text">
+                        <p>Demonstrating a Strong Commitment to Learning and Outstanding Performance<br />
+                        in all areas of Communication and Spoken English</p>
                     </div>
 
-                    <div className="text-center mt-[-9px]">
-                    <div className="inline-block text-left text-sm text-black" style={{ border: '1px solid #ccc', padding: '12px 20px', borderRadius: '8px', backgroundColor: 'rgba(255,255,255,0.1)' }}>
-                        <p className="mb-2">📅 <strong>Awarded on:</strong> {awardedOn || "July 18, 2025"}</p>
-                        <p className="mb-2">⏱️ <strong>Course Duration:</strong> {duration || "6 Weeks"}</p>
-                        <p>🆔 <strong>Certificate ID:</strong> {uniqueCode}</p>
-                    </div>
+                    <div className="award-details">
+                        <div className="award-box">
+                            <p>📅 <strong>Awarded on:</strong> {awardedOn || "July 18, 2025"}</p>
+                            <p>⏱️ <strong>Course Duration:</strong> {duration || "6 Weeks"}</p>
+                            <p>🆔 <strong>Certificate ID:</strong> {uniqueCode}</p>
+                        </div>
                     </div>
                 </div>
 
                 {/* Decorative Seal/Logo */}
-                <div className="absolute bottom-[33px] right-[30px]" style={{ width: '50px', height: '50px', zIndex: 10 }}>
+                <div className="decorative-seal">
                     <div className="relative w-full h-full">
-                    <div className="absolute inset-0 rounded-full border-4 border-double" style={{ borderColor: '#B8860B', background: 'radial-gradient(circle, #FFD700, #B8860B)', boxShadow: '0 4px 8px rgba(0,0,0,0.3)' }}></div>
-                    <div className="absolute inset-2 rounded-full flex flex-col items-center justify-center text-center" style={{ border: '2px solid #B8860B', background: 'linear-gradient(to bottom right, #FBBF24, #D97706)' }}>
-                        <div className="text-white font-bold text-lg leading-none" style={{ textShadow: '1px 1px 2px rgba(0,0,0,0.8)', fontSize: '16px' }}></div>
-                    </div>
-                    <div className="absolute -top-1 left-1/2 transform -translate-x-1/2 text-lg" style={{ color: '#FBBF24' }}>✦</div>
-                    <div className="absolute top-1/2 -right-1 transform -translate-y-1/2 text-lg" style={{ color: '#FBBF24' }}>✦</div>
-                    <div className="absolute -bottom-1 left-1/2 transform -translate-x-1/2 text-lg" style={{ color: '#FBBF24' }}>✦</div>
-                    <div className="absolute top-1/2 -left-1 transform -translate-y-1/2 text-lg" style={{ color: '#FBBF24' }}>✦</div>
+                        <div className="absolute inset-0 rounded-full border-4 border-double" style={{ borderColor: '#B8860B', background: 'radial-gradient(circle, #FFD700, #B8860B)', boxShadow: '0 4px 8px rgba(0,0,0,0.3)' }}></div>
+                        <div className="absolute inset-2 rounded-full flex flex-col items-center justify-center text-center" style={{ border: '2px solid #B8860B', background: 'linear-gradient(to bottom right, #FBBF24, #D97706)' }}></div>
+                        <div className="absolute -top-1 left-1/2 transform -translate-x-1/2 text-lg" style={{ color: '#FBBF24' }}>✦</div>
+                        <div className="absolute top-1/2 -right-1 transform -translate-y-1/2 text-lg" style={{ color: '#FBBF24' }}>✦</div>
+                        <div className="absolute -bottom-1 left-1/2 transform -translate-x-1/2 text-lg" style={{ color: '#FBBF24' }}>✦</div>
+                        <div className="absolute top-1/2 -left-1 transform -translate-y-1/2 text-lg" style={{ color: '#FBBF24' }}>✦</div>
                     </div>
                 </div>
 
                 {/* Signature line */}
-                <div className="absolute bottom-[110px] right-[90px]" style={{ width: '190px', zIndex: 5 }}>
-                    <div className="text-center ">
-                    <div className="border-t-2 border-black " style={{ width: '150px', margin: '0 auto' }}></div>
-                    <p className="text-sm font-semibold text-black">Authorized Signature</p>
-                    <p className="text-xs text-black">Director, Great Academy</p>
-                    </div>
+                <div className="signature-area">
+                    <div className="signature-line"></div>
+                    <p className="signature-text">Authorized Signature</p>
+                    <p className="signature-title">Director, Great Academy</p>
                 </div>
                 </div>
             </div>

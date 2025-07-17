@@ -1,0 +1,172 @@
+/* Production-safe certificate styles */
+@import url('https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;1,400&display=swap');
+
+.certificate-container {
+  font-family: 'Playfair Display', serif !important;
+  position: relative;
+  width: 700px;
+  height: 1024px;
+  margin: 0 auto;
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+}
+
+.certificate-title {
+  position: absolute;
+  top: 60px;
+  width: 100%;
+  text-align: center;
+  z-index: 2;
+}
+
+.certificate-title h1 {
+  font-family: 'Playfair Display', serif !important;
+  font-size: 72px !important;
+  font-weight: 700 !important;
+  color: #FFD700 !important;
+  text-shadow: 2px 2px 4px rgba(0,0,0,0.5) !important;
+  letter-spacing: 3px !important;
+  margin: 0 0 8px 0 !important;
+  line-height: 1.1 !important;
+}
+
+.certificate-title h2 {
+  font-family: 'Playfair Display', serif !important;
+  font-size: 36px !important;
+  font-weight: 600 !important;
+  color: #FBBF24 !important;
+  text-shadow: 1px 1px 2px rgba(0,0,0,0.4) !important;
+  letter-spacing: 2px !important;
+  margin: 0 !important;
+  line-height: 1.1 !important;
+}
+
+.certificate-content {
+  position: absolute;
+  left: 60px;
+  right: 60px;
+  top: 400px;
+  z-index: 2;
+}
+
+.certify-text {
+  text-align: center;
+  margin-bottom: 16px;
+}
+
+.certify-text p {
+  font-size: 18px !important;
+  font-weight: 600 !important;
+  color: #000000 !important;
+  margin: 0 0 8px 0 !important;
+  line-height: 1.2 !important;
+}
+
+.student-name {
+  text-align: center;
+  margin-bottom: 12px;
+}
+
+.student-name h2 {
+  font-family: 'Playfair Display', serif !important;
+  font-size: 48px !important;
+  font-weight: 700 !important;
+  font-style: italic !important;
+  color: #000000 !important;
+  border-bottom: 1px solid #000000 !important;
+  padding-bottom: 2px !important;
+  display: inline-block !important;
+  min-width: 300px !important;
+  margin: 0 !important;
+  line-height: 1.1 !important;
+}
+
+.course-text {
+  text-align: center;
+  margin-bottom: 12px;
+}
+
+.course-text p {
+  font-size: 16px !important;
+  color: #000000 !important;
+  line-height: 1.4 !important;
+  margin: 0 !important;
+}
+
+.achievement-text {
+  text-align: center;
+  margin-bottom: 24px;
+}
+
+.achievement-text p {
+  font-size: 12px !important;
+  color: #000000 !important;
+  line-height: 1.4 !important;
+  max-width: 500px !important;
+  margin: 0 auto !important;
+  padding: 0 16px !important;
+}
+
+.award-details {
+  text-align: center;
+  margin-top: -4px;
+}
+
+.award-box {
+  display: inline-block;
+  text-align: left;
+  font-size: 14px !important;
+  color: #000000 !important;
+  border: 1px solid #cccccc !important;
+  padding: 12px 20px !important;
+  border-radius: 8px !important;
+  background-color: rgba(255,255,255,0.1) !important;
+}
+
+.award-box p {
+  margin: 0 0 8px 0 !important;
+  line-height: 1.2 !important;
+}
+
+.award-box p:last-child {
+  margin-bottom: 0 !important;
+}
+
+.decorative-seal {
+  position: absolute;
+  bottom: 20px;
+  right: 20px;
+  width: 50px;
+  height: 50px;
+  z-index: 10;
+}
+
+.signature-area {
+  position: absolute;
+  bottom: 110px;
+  right: 90px;
+  width: 190px;
+  z-index: 5;
+  text-align: center;
+}
+
+.signature-line {
+  width: 150px !important;
+  margin: 0 auto !important;
+  border-top: 2px solid #000000 !important;
+  padding-top: 4px !important;
+}
+
+.signature-text {
+  font-size: 14px !important;
+  font-weight: 600 !important;
+  color: #000000 !important;
+  margin: 0 !important;
+}
+
+.signature-title {
+  font-size: 12px !important;
+  color: #000000 !important;
+  margin: 4px 0 0 0 !important;
+}
